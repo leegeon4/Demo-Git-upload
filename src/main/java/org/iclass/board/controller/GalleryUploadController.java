@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -42,6 +43,21 @@ public class GalleryUploadController {
         String path = "c:\\upload";
 
         return "redirect:/gallery";
+    }
+
+    @GetMapping("/galleries")
+    public String galleries(Model model) {
+        //전체 리스트 가져오기
+        List<GalleryDTO> list = uploadService.list();
+        model.addAttribute("list", list);
+        return "galleries";
+    }
+
+    @PostMapping("/galleries")
+    public String uploadMany(GalleryDTO dto) throws IOException {
+        //하나의 요청으로 여러개의 파일을 업로드
+        uploadService.uploadManyFile(dto);
+        return "redirect:/galleries";
     }
 
 }
